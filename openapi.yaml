@@ -1,0 +1,497 @@
+openapi: 3.0.3
+info:
+  title: Dokumen API Cloud Function - OpenAPI 3.0
+  description: >-
+    Dokumentasi API Cloud Function - warsekotech
+  termsOfService: https://github.com/warungsembako/swagger
+  contact:
+    url: https://github.com/warungsembako
+  license:
+    name: UrSmartEcosystem Package
+    url: https://pkg.go.dev/github.com/warsekotech/be_warsekotech
+  version: 1.0.11
+externalDocs:
+  description: Repository GCF
+  url: https://github.com/warsekotech/gcf/
+servers:
+  - url: https://asia-southeast2-urse-project.cloudfunctions.net/
+tags:
+  - name: Auth
+    description: Login, SignUp, and Reset Password
+    externalDocs:
+      description: Deskripsi dan Kode Program
+      url: https://warsekotech.github.io/gcf/login/
+  - name: User
+    description: Get Profile and CRUD Device
+  - name: Log History
+    description: Insert, Get, and Delete History
+paths:
+  /urse-signup:
+    post:
+      tags:
+        - Auth
+      summary: SingUp Data User
+      description: Signup Data User
+      operationId: signUpService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Signup"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+  /urse-login:
+    post:
+      tags:
+        - Auth
+      summary: Login get Token
+      description: Login and Get User Token
+      operationId: loginService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "405":
+          description: Invalid input
+      security:
+        - token:
+            - write:apiKey
+            - read:apiKey
+        # - Bearer: []
+  /urse-sendotp:
+    post:
+      tags:
+        - Auth
+      summary: Send OTP
+      description: Send OTP to Email for Reset Password
+      operationId: sendOTPService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendOTP"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+  /urse-verifyotp:
+    post:
+      tags:
+        - Auth
+      summary: Verify OTP
+      description: Verify OTP to Email for Reset Password
+      operationId: verifyOTPService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyOTP"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+  /urse-resetpassword:
+    post:
+      tags:
+        - Auth
+      summary: Reset Password
+      description: Reset Password After Verify OTP
+      operationId: resetPasswordService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPassword"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+  /urse-getprofile:
+    get:
+      tags:
+        - User
+      summary: Get Profile User
+      description: Mendapatkan Profile Berdasarkan User Login
+      operationId: getProfileService
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResponseProfile"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-insertdevices:
+    post:
+      tags:
+        - User
+      summary: Insert Device User
+      description: Menambah Device User
+      operationId: insertDeviceService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/insertDevices"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsertResponseDevice"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-getdevices:
+    get:
+      tags:
+        - User
+      summary: Get Device User
+      description: Mendapatkan Device Berdasarkan User Login
+      operationId: getDeviceService
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResponseDevice"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-updatedevice:
+    put:
+      tags:
+        - User
+      summary: Update Device User
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true
+          description: Masukan Id Device.
+      description: Memperbaharui Device Berdasarkan User Login
+      operationId: updateDeviceService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/insertDevices"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-deletedevice:
+    delete:
+      tags:
+        - User
+      summary: Delete Device User
+      parameters:
+        - in: query
+          name: id
+          type: string
+          required: true
+          description: Masukan Id Device.
+      description: Menghapus Device Berdasarkan User Login
+      operationId: deleteDeviceService
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-inserthistory:
+    post:
+      tags:
+        - Log History
+      summary: Insert Log History
+      description: Menambah Device User
+      operationId: insertHistoryService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/insertHistory"
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsertResponseHistory"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-gethistory:
+    get:
+      tags:
+        - Log History
+      summary: Get Log History
+      description: Mendapatkan History Berdasarkan User Login
+      operationId: getHistoryService
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResponseHistory"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+  /urse-deletehistory:
+    delete:
+      tags:
+        - Log History
+      summary: Delete Log Hisory
+      description: Menghapus Semua History Berdasarkan User Login
+      operationId: deleteHistoryService
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "405":
+          description: Invalid input
+      security:
+        - Bearer: []
+components:
+  schemas:
+    Signup:
+      type: object
+      properties:
+        username:
+          type: string
+          example: warseko
+        email:
+          type: string
+          example: email@gmail.com
+        password:
+          type: string
+          example: secret
+        phonenumber:
+          type: string
+          example: 628123456789
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          example: warseko@gmail.com
+        password:
+          type: string
+    SendOTP:
+      type: object
+      properties:
+        email:
+          type: string
+          example: warseko@gmail.com
+    VerifyOTP:
+      type: object
+      properties:
+        otp:
+          type: string
+          example: 123456
+        email:
+          type: string
+          example: warseko@gmail.com
+    ResetPassword:
+      type: object
+      properties:
+        otp:
+          type: string
+          example: 123456
+        email:
+          type: string
+          example: warseko@gmail.com
+        password:
+          type: string
+          example: secret12345678
+    insertDevices:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Lampu
+        topic:
+          type: string
+          example: kamar/lampu
+    insertHistory:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Lampu
+        topic:
+          type: string
+          example: kamar/lampu
+        payload:
+          type: string
+          example: Menyala
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: bool
+          example: true
+        message:
+          type: string
+          example: pesan berhasil
+    AuthResponse:
+      type: object
+      properties:
+        status:
+          type: bool
+          example: true
+        token:
+          type: string
+          example: tokencuy
+        message:
+          type: string
+          example: Selamat Datang
+    InsertResponseDevice:
+      type: object
+      properties:
+        status:
+          type: bool
+          example: true
+        message:
+          type: string
+          example: "Device berhasil ditambahkan dengan nama: "
+    InsertResponseHistory:
+      type: object
+      properties:
+        status:
+          type: bool
+          example: true
+        message:
+          type: string
+          example: "History berhasil ditambahkan dengan nama: dan payload: "
+    GetResponseProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 123456
+        email:
+          type: string
+          example: mail@gmail.com
+        password:
+          type: string
+          example: secret
+        phonenumber:
+          type: string
+          example: 628123456789
+        username:
+          type: string
+          example: warseko
+    GetResponseDevice:
+      type: object
+      properties:
+        status:
+          type: bool
+          example: true
+        message:
+          type: string
+          example: "Device data successfully retrieved"
+        data:
+          type: list
+          example: [{ "id": "123456", "name": "Lampu", "topic": "kamar/lampu" }, { "id": "123456", "name": "Kipas", "topic": "kamar/kipas" }]
+    GetResponseHistory:
+      type: object
+      properties:
+        status:
+          type: bool
+          example: true
+        message:
+          type: string
+          example: "Device data successfully retrieved"
+        data:
+          type: list
+          example:
+            [
+              { "id": "123456", "name": "Lampu", "topic": "kamar/lampu", "user": "user@gmail.com", "created_at": "2023-11-18T06:41:31Z" },
+              { "id": "123456", "name": "Kipas", "topic": "kamar/kipas", "user": "userr@gmail.com", "created_at": "2023-11-18T06:41:31Z" },
+            ]
+  requestBodies:
+    AuthReq:
+      description: Request Authentication
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Auth"
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/AuthResponse"
+  securitySchemes:
+    token:
+      type: apiKey
+      name: token
+      in: header
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: >-
+        Masukan token dengan `Bearer: ` contoh "Bearer abcde12345".
